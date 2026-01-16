@@ -47,6 +47,7 @@ class SubscriptionExportV3 implements ShouldQueue
 
         $subscriptionReportServices = new SubscriptionReportServices();
         $subscriptionReportServices->generateSubscriptionReportCSV(
+            $this->data['nameFile'],
             [
                 'from' => $from,
                 'to' => $to

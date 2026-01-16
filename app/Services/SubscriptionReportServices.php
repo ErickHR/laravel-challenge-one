@@ -99,10 +99,8 @@ class SubscriptionReportServices
         }
     }
 
-    public function generateSubscriptionReportCSV($filters)
+    public function generateSubscriptionReportCSV($fileName, $filters)
     {
-
-        $fileName = 'subscription_report_' . date('Y-m-d_H-i-s') . '.csv';
         $filePath = storage_path('app/public/' . $fileName);
         $from = $filters['from'];
         $to = $filters['to'];
@@ -152,6 +150,7 @@ class SubscriptionReportServices
 
             $reportLoans = DB::table('report_loans')
                 ->select('subscription_report_id', 'bank', 'status', 'expiration_days', 'amount', 'currency')
+                ->whereBetween('created_at', [$from, $to])
                 ->whereIn('subscription_report_id', $subscriptionReportsIds)
                 ->get()
                 ->groupBy('subscription_report_id');
@@ -159,17 +158,20 @@ class SubscriptionReportServices
             Log::info('Mostrenado la query para sacar que indices usar en report other debts');
             Log::info(DB::table('report_loans')
                 ->select('subscription_report_id', 'bank', 'status', 'expiration_days', 'amount', 'currency')
+                ->whereBetween('created_at', [$from, $to])
                 ->whereIn('subscription_report_id', $subscriptionReportsIds)
                 ->toSql());
 
             $reportOtherDebts = DB::table('report_other_debts')
                 ->select('subscription_report_id', 'entity', 'expiration_days', 'amount', 'currency')
+                ->whereBetween('created_at', [$from, $to])
                 ->whereIn('subscription_report_id', $subscriptionReportsIds)
                 ->get()
                 ->groupBy('subscription_report_id');
 
             $reportCreditCards = DB::table('report_credit_cards')
                 ->select('subscription_report_id', 'bank', 'currency', 'line', 'used')
+                ->whereBetween('created_at', [$from, $to])
                 ->whereIn('subscription_report_id', $subscriptionReportsIds)
                 ->get()
                 ->groupBy('subscription_report_id');
@@ -277,7 +279,7 @@ class SubscriptionReportServices
     public function generateReportV3($filters)
     {
         try {
-            $fileName = 'subscription_report_' . date('Y-m-d_H-i-s') . '.xlsx';
+            $fileName = 'subscription_report_' . date('Y-m-d_H-i-s') . '.csv';
             $filePath = storage_path('app/public/' . $fileName);
             $from = $filters['from'];
             $to = $filters['to'];
@@ -297,7 +299,7 @@ class SubscriptionReportServices
             ]);
 
             return [
-                'message' => 'Excel Processing started. You can download it later using the provided URL.',
+                'message' => 'CSV Processing started. You can download it later using the provided URL.',
                 'file' => $fileName,
                 'url' => 'http://challenge.erick-rivas.com/download-stored-excel?filename=' . $fileName
             ];
