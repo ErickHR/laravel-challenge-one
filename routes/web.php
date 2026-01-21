@@ -1,10 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SubscriptionReportController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/download-stored-excel', [SubscriptionReportController::class, 'downloadStoredExcel']);
+Route::prefix('/v1/report')->group(base_path('src/Reports/SubscriptionReport/Infrastructure/Routes/web.php'));

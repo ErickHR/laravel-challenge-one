@@ -49,20 +49,6 @@
                             >
                         </div>
 
-                        <div>
-                            <label for="report_type" class="block mb-2 text-sm font-medium text-[#1b1b18] dark:text-[#EDEDEC]">Medio</label>
-                            <select
-                                id="report_type"
-                                name="report_type"
-                                class="w-full px-4 py-2 border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-sm bg-white dark:bg-[#161615] text-[#1b1b18] dark:text-[#EDEDEC]"
-                                required
-                            >
-                                <option value="download">Descargar instantaneamente</option>
-                                <option value="jobs_maatwebsite">Jobs - Maatwebsite</option>
-                                <option value="jobs_csv">Jobs - CSV</option>
-                            </select>
-                        </div>
-
                         <br>
 
                         <button
@@ -82,53 +68,25 @@
                         document.getElementById('date_filter--form').addEventListener('submit', async function(e) {
                             e.preventDefault();
 
-                            if( reportType.value === 'download' ) {
-                                const fromDate = document.getElementById('from_date').value;
-                                const toDate = document.getElementById('to_date').value;
-                                const downloadUrl = `/api/subscription-report/generate-report/download?from=${fromDate}&to=${toDate}`;
-                                // abrir
-                                window.location.href = downloadUrl;
-                            } else if( reportType.value === 'jobs_maatwebsite' ) {
-                                const response = await fetch('/api/subscription-report/generate-report/jobs/maatwebsite', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                    },
-                                    body: JSON.stringify({
-                                        from: document.getElementById('from_date').value,
-                                        to: document.getElementById('to_date').value
-                                    })
-                                });
-                                const result = await response.json();
+                            const response = await fetch('/api/v1/report/subscription-report/save-report', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: JSON.stringify({
+                                    from: document.getElementById('from_date').value,
+                                    to: document.getElementById('to_date').value
+                                })
+                            });
+                            const result = await response.json();
 
-                                resultMessage.innerHTML = `
-                                <strong class="text-green-600 dark:text-green-400">El reporte se está generando en segundo plano. Por favor, en unos minutos accede al link proporcionado para descargarlo.</strong>
-                                <br>
-                                <a href="${result.url}" class="text-blue-600 dark:text-blue-400 underline" target="_blank">
-                                   ${result.file}
-                                </a>`;
-                            } else if( reportType.value === 'jobs_csv' ) {
-                                const response = await fetch('/api/subscription-report/generate-report/jobs/csv', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                    },
-                                    body: JSON.stringify({
-                                        from: document.getElementById('from_date').value,
-                                        to: document.getElementById('to_date').value
-                                    })
-                                });
-                                const result = await response.json();
-
-                                resultMessage.innerHTML = `
-                                <strong class="text-green-600 dark:text-green-400">El reporte se está generando en segundo plano. Por favor, en unos minutos accede al link proporcionado para descargarlo.</strong>
-                                <br>
-                                <a href="${result.url}" class="text-blue-600 dark:text-blue-400 underline" target="_blank">
-                                   ${result.file}
-                                </a>`;
-                            }
+                            resultMessage.innerHTML = `
+                            <strong class="text-green-600 dark:text-green-400">El reporte se está generando en segundo plano. Por favor, en unos minutos accede al link proporcionado para descargarlo.</strong>
+                            <br>
+                            <a href="${result.url}" class="text-blue-600 dark:text-blue-400 underline" target="_blank">
+                                ${result.file}
+                            </a>`;
 
                         });
                     </script>
