@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\Reports\SubscriptionReport\Application\Dto;
+namespace Src\Reports\SubscriptionReport\Infrastructure\Dto;
 
 use Illuminate\Foundation\Http\FormRequest;
 

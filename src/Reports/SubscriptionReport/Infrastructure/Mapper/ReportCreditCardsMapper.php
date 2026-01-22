@@ -2,10 +2,11 @@
 
 namespace Src\Reports\SubscriptionReport\Infrastructure\Mapper;
 
-use App\Enums\DebtType;
-use App\Enums\EntityType;
 use Src\Reports\SubscriptionReport\Application\Dto\ReportRowDto;
 use Src\Reports\SubscriptionReport\Application\Mapper\ReportRowMapper;
+
+use Src\Reports\SubscriptionReport\Domain\ValueObject\DebtType;
+use Src\Reports\SubscriptionReport\Domain\ValueObject\EntityType;
 
 class ReportCreditCardsMapper implements ReportRowMapper
 {

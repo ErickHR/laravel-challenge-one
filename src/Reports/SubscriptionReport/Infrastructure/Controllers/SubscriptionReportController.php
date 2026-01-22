@@ -2,12 +2,12 @@
 
 namespace Src\Reports\SubscriptionReport\Infrastructure\Controllers;
 
-use Src\Reports\SubscriptionReport\Application\Dto\GetRegisterDownloadRequest;
-use Src\Reports\SubscriptionReport\Application\Dto\StoreSubscriptionReportRequest;
 use Src\Reports\SubscriptionReport\Application\Service\RegisterDownloadImpl;
 use Src\Reports\SubscriptionReport\Application\UseCase\DownloadSubscriptionReportUseCase;
 use Src\Reports\SubscriptionReport\Application\UseCase\SaveSubscriptionReportUseCase;
 use Src\Reports\SubscriptionReport\Domain\Exception\ReportNotFoundException;
+use Src\Reports\SubscriptionReport\Infrastructure\Dto\GetRegisterDownloadRequest;
+use Src\Reports\SubscriptionReport\Infrastructure\Dto\StoreSubscriptionReportRequest;
 use Src\Reports\SubscriptionReport\Infrastructure\Service\Storage\DocumentManagerService;
 
 class SubscriptionReportController

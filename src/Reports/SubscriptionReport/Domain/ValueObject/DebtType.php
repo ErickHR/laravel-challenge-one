@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Enums;
+namespace Src\Reports\SubscriptionReport\Domain\ValueObject;
 
 enum DebtType: string
 {

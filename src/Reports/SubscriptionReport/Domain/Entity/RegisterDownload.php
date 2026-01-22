@@ -2,7 +2,7 @@
 
 namespace Src\Reports\SubscriptionReport\Domain\Entity;
 
-use App\Enums\StatusProcessReport;
+use Src\Reports\SubscriptionReport\Domain\ValueObject\StatusProcessReport;
 
 class RegisterDownload
 {
