@@ -1,9 +1,8 @@
 <?php
 
-namespace Src\Reports\SubscriptionReport\Infrastructure\Repository;
+namespace Src\Reports\SubscriptionReport\Application\Service;
 
 use App\Models\RegisterDownloand;
-use Illuminate\Support\Facades\Log;
 use Src\Reports\SubscriptionReport\Domain\Entity\RegisterDownload;
 
 use Src\Reports\SubscriptionReport\Domain\Repository\RegisterDownloadRepository;
@@ -32,12 +31,12 @@ class RegisterDownloadImpl implements RegisterDownloadRepository
         RegisterDownloand::create([
             'file_name' => $registerDownload->getFileName(),
             'file_path' => $registerDownload->getFilePath(),
-            'status' => $registerDownload->getStatus(),
+            'status' => $registerDownload->getStatus()->value,
         ]);
     }
 
-    public function updateStatus(int $id, bool $status): void
+    public function updateStatus(RegisterDownload $registerDownload): void
     {
-        RegisterDownloand::where('id', $id)->update(['status' => $status]);
+        RegisterDownloand::where('id', $registerDownload->getId())->update(['status' => $registerDownload->getStatus()]);
     }
 }

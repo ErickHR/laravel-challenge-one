@@ -1,8 +1,6 @@
 <?php
 
-namespace Src\Reports\SubscriptionReport\Application;
-
-use App\Enums\StatusProcessReport;
+namespace Src\Reports\SubscriptionReport\Application\UseCase;
 
 use Src\Reports\SubscriptionReport\Domain\Repository\RegisterDownloadRepository;
 
@@ -18,9 +16,10 @@ class FailedGenerateSubscriptionReportUseCase
     public function execute($fileName)
     {
         $registerDownload = $this->registerDownloadRepository->getByFileName($fileName);
+        $registerDownload->markAsFailed();
 
         if ($registerDownload) {
-            $this->registerDownloadRepository->updateStatus($registerDownload->getId(), StatusProcessReport::FAILED->value);
+            $this->registerDownloadRepository->updateStatus($registerDownload);
         }
     }
 }

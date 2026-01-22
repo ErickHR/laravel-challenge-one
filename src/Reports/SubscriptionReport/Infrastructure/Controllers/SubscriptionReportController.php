@@ -2,12 +2,13 @@
 
 namespace Src\Reports\SubscriptionReport\Infrastructure\Controllers;
 
-use Src\Reports\SubscriptionReport\Infrastructure\DTO\GetRegisterDownloadRequest;
-use Src\Reports\SubscriptionReport\Infrastructure\DTO\StoreSubscriptionReportRequest;
-use Src\Reports\SubscriptionReport\Infrastructure\Repository\RegisterDownloadImpl;
-
-use Src\Reports\SubscriptionReport\Application\DownloadSubscriptionReportUseCase;
-use Src\Reports\SubscriptionReport\Application\SaveSubscriptionReportUseCase;
+use Src\Reports\SubscriptionReport\Application\Dto\GetRegisterDownloadRequest;
+use Src\Reports\SubscriptionReport\Application\Dto\StoreSubscriptionReportRequest;
+use Src\Reports\SubscriptionReport\Application\Service\RegisterDownloadImpl;
+use Src\Reports\SubscriptionReport\Application\UseCase\DownloadSubscriptionReportUseCase;
+use Src\Reports\SubscriptionReport\Application\UseCase\SaveSubscriptionReportUseCase;
+use Src\Reports\SubscriptionReport\Domain\Exception\ReportNotFoundException;
+use Src\Reports\SubscriptionReport\Infrastructure\Service\Storage\DocumentManagerService;
 
 class SubscriptionReportController
 {
@@ -31,9 +32,18 @@ class SubscriptionReportController
     {
         try {
             $registerDownloadImpl = new RegisterDownloadImpl();
-            $downloadSubscriptionReportUseCase = new DownloadSubscriptionReportUseCase($registerDownloadImpl);
+            $documentManagerService = new DocumentManagerService();
 
-            return  $downloadSubscriptionReportUseCase->execute($request);
+            $downloadSubscriptionReportUseCase = new DownloadSubscriptionReportUseCase($registerDownloadImpl, $documentManagerService);
+            $result = $downloadSubscriptionReportUseCase->execute($request);
+            return  response()->download(
+                $result['file_path'],
+                $result['file_name'],
+            );
+        } catch (ReportNotFoundException $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ], 404);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Error al descargar el reporte',

@@ -8,5 +8,5 @@ interface RegisterDownloadRepository
 {
     public function getByFileName(string $fileName): ?RegisterDownload;
     public function save(RegisterDownload $registerDownload): void;
-    public function updateStatus(int $id, bool $status): void;
+    public function updateStatus(RegisterDownload $registerDownload): void;
 }
